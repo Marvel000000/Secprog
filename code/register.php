@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Registration</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="../style/register.css">
+    <link rel="stylesheet" href="../styles/register.css">
 </head>
 <body>
-    <form action="../controllers/regAuth.php" method="post" enctype="multipart/form-data">
+    <form action="../controller/regAuth.php" method="post" enctype="multipart/form-data">
          <h2>User Registration Form</h2>
 
         <label for="name">Name:</label>
