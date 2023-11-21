@@ -27,13 +27,6 @@ CREATE TABLE `content` (
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `playlist` (
-  `id` varchar(20) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `description` varchar(1000) NOT NULL,
-  `thumb` varchar(100) NOT NULL,
-  `date` date NOT NULL DEFAULT current_timestamp(),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `users` (
   `id` varchar(255) NOT NULL,
@@ -42,4 +35,3 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-COMMIT;
