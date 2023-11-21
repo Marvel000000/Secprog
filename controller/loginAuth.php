@@ -39,7 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["name"] = $name;
             $_SESSION["email"] = $email;
 
-            // Redirect to the dashboard
+            // Debugging output
+            echo "Login successful. Redirecting to dashboard...";
             header("location: ../code/dashboard.php");
             exit;
         } else {
@@ -51,6 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->close();
 }
+
+// Debugging output
+echo "Login failed. Redirecting to login page...";
 
 // Close the database connection
 $conn->close();
