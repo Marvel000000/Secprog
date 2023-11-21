@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Profile</title>
-    <link rel="stylesheet" href="../style/update.css">
+    <link rel="stylesheet" href="../styles/update.css">
 </head>
 <body>
     <div class="container">
 
-        <form action="../controllers/updateProfile.php" method="post" enctype="multipart/form-data">
+        <form action="../controller/updateProfile.php" method="post" enctype="multipart/form-data">
             <!-- Update Name Section -->
             <h3>Update Name</h3>
             <label for="new_name">New Name:</label>
