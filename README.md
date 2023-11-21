@@ -8,4 +8,5 @@ Upload :
 - git init .
 - git add .
 - git commit -m"(kalau mau ada pesan)"
-- git push <kalau belum buat git remote add> <branch>
+"kalau belum ada git remote -> git remote add (ikutin help aja)"
+- git push "nama git remote" branch
