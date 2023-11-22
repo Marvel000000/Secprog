@@ -35,3 +35,10 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `active_sessions` (
+  `sessionID` varchar(10) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `last_login` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+COMMIT;
