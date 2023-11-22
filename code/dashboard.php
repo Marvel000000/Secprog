@@ -33,22 +33,31 @@ if (isset($_SESSION['loggedin'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="../styles/dashboard.css">
+    <script src="../assets/js.js"></script>
+
 </head>
 <body>
 
-    <header>
-        <h1>Dashboard!</h1>
+   <!-- header.php -->
 
-        <?php
-        if ($isLoggedIn) {
-            echo '<button onclick="window.location.href=\'update.php\'">Update Profile</button>';
-            echo '<button onclick="window.location.href=\'../controller/logoutauth.php\'">Log Out</button>';
-        } else {
-            echo '<button onclick="window.location.href=\'login.php\'">Login</button>';
-            echo '<button onclick="window.location.href=\'register.php\'">Register</button>';
-        }
-        ?>
-    </header>
+   <nav class="navbar">
+        <div class="logo-container">
+            <a href="dashboard.php" class="logo-link">
+                <h1 class="logo-text">Bodtrest</h1>
+            </a>
+        </div>
+
+        <div class="user-container">
+            <?php if ($isLoggedIn): ?>
+                <button onclick="window.location.href='update.php'">Update Profile</button>
+                <button onclick="window.location.href='../controller/logoutauth.php'">Log Out</button>
+            <?php else: ?>
+                <button onclick="window.location.href='login.php'">Login</button>
+                <button onclick="window.location.href='register.php'">Register</button>
+            <?php endif; ?>
+        </div>
+    </nav>
+
 
     <div class="custom-container">
         <h1>Content</h1>
@@ -103,18 +112,6 @@ if (isset($_SESSION['loggedin'])) {
             </div>
         </div>
     </div>
-
-    <script>
-        // JavaScript functions for modal
-        function openModal() {
-            document.getElementById('addContentModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('addContentModal').style.display = 'none';
-        }
-    </script>
-
 </body>
 </html>
 

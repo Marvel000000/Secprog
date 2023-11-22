@@ -4,7 +4,6 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
-    height: 100vh; /* Center content vertically on the page */
 }
 
 .custom-container {
@@ -42,30 +41,51 @@ p {
     line-height: 1.6;
 }
 
-header {
+/* dashboard.css */
+
+/* dashboard.css */
+
+
+
+/* ... (existing styles) ... */
+
+/* Header/Navbar styles */
+/* ... (existing styles) ... */
+
+/* New Navbar styles */
+.navbar {
     background-color: #333;
     color: #fff;
     padding: 10px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-header h1 {
-    margin: 0;
+/* Add this style to align buttons in one line */
+.navbar .user-container {
+    margin-right: 20px;
 }
 
-header button {
-    background-color: #4CAF50;
+/* ... (existing styles) ... */
+
+
+.logo-container {
+    margin-left: 20px;
+}
+
+.logo-link {
+    text-decoration: none;
     color: #fff;
-    padding: 8px 16px;
-    margin: 0 5px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-header button:hover {
-    background-color: #45a049;
+.logo-text {
+    font-size: 24px;
+    margin: 0;
+    color: #fff;
 }
+
 
 button {
     background-color: #4CAF50;
@@ -76,6 +96,14 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Add this style to align buttons in one line */
+
+
 
 /* Add this to your existing dashboard.css or create a new CSS file */
 /* Add this to your existing dashboard.css or create a new CSS file */
