@@ -1,15 +1,24 @@
 <?php
 // Include your connection and configuration files
+
+
 require_once '../controller/connection.php';
-$id = $_GET['id'];
-$sql = "SELECT image, title, description, date FROM content WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $id); // Assuming the ID is an integer, adjust the type if it's different
-$stmt->execute();
-$stmt->bind_result($image, $title, $description, $date);
-$stmt->fetch();
-$stmt->close();
-$conn->close();
+
+session_start();
+
+if (isset($_SESSION['loggedin'])) {
+        $id = $_GET['id'];
+        $sql = "SELECT image, title, description, date FROM content WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $id); // Assuming the ID is an integer, adjust the type if it's different
+        $stmt->execute();
+        $stmt->bind_result($image, $title, $description, $date);
+        $stmt->fetch();
+        $stmt->close();
+        $conn->close();
+} else {
+    header("location: ../code/login.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -29,8 +38,17 @@ $conn->close();
             <h1><?php echo $title; ?></h1>
             <p><?php echo $description; ?></p>
             <p>Date: <?php echo $date; ?></p>
+            <div class=button>
+            <form action="../controller/delete.php" method="post" onsubmit="return confirm('Are you sure you want to delete this content?');">
+                <input type="hidden" name="delete_id" value="<?php echo $id; ?>">
+                <input type="hidden" name="delete_image" value="<?php echo $image; ?>">
+                <button id="delete-button" type="submit">Delete</button>
+            </form>
+            <button id=back-button onclick="window.location.href='./dashboard.php'">Back</button>
+            </div>
         </div>
-        <button onclick="window.location.href='./dashboard.php'">Back</button>
+           
+        
     </custom-container>
 
 </body>
