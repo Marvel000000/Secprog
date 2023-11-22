@@ -13,7 +13,7 @@ session_start();
 if (isset($_SESSION['loggedin'])) {
     $isLoggedIn = true;
 
-    // Fetch all content from the database using prepared statements
+
     $sql = "SELECT id, title, image FROM content";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
@@ -30,6 +30,7 @@ if (isset($_SESSION['loggedin'])) {
 
     // Check if a search term is provided
     if (isset($_GET['search']) && !empty($_GET['search'])) {
+
         // Validate and sanitize search term
         $searchTerm = mysqli_real_escape_string($conn, $_GET['search']);
 
@@ -39,6 +40,12 @@ if (isset($_SESSION['loggedin'])) {
         $searchStmt->bind_param("s", $searchTerm);
         $searchStmt->execute();
         $searchResult = $searchStmt->get_result();
+
+        $searchTerm = $_GET['search'];
+        
+        // Perform the search query
+        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE '%$searchTerm%'";
+        $searchResult = $conn->query($searchSql);
 
         // Check for success
         if ($searchResult) {
@@ -51,6 +58,7 @@ if (isset($_SESSION['loggedin'])) {
             } else {
                 $noSearchResult = true; // Flag to indicate no search results
             }
+
         } else {
             error_log("Error: " . $searchStmt->error);
             echo "An error occurred. Please try again later.";
@@ -59,6 +67,8 @@ if (isset($_SESSION['loggedin'])) {
 } else {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging
+}
+    }
 }
 ?>
 
@@ -87,7 +97,11 @@ if (isset($_SESSION['loggedin'])) {
 
         <div class="search-container">
             <form action="dashboard.php" method="get">
+
                 <input type="text" placeholder="Search..." name="search" value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
+
+                <input type="text" placeholder="Search..." name="search">
+
                 <button type="submit">Search</button>
             </form>
         </div>
@@ -137,6 +151,8 @@ if (isset($_SESSION['loggedin'])) {
         <?php if ($isLoggedIn): ?>
             <button onclick="openModal()">Add Content</button>
         <?php endif; ?>
+
+        
 
         <!-- Add Content Form Modal -->
         <div id="addContentModal" class="modal">
