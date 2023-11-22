@@ -1,5 +1,14 @@
 CREATE DATABASE secprog
 
+
+CREATE TABLE `users` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `bookmark` (
   `user_id` varchar(20) NOT NULL,
   `playlist_id` varchar(20) NOT NULL
@@ -27,7 +36,6 @@ CREATE TABLE `content` (
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
 CREATE TABLE `users` (
   `id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -42,3 +50,4 @@ CREATE TABLE `active_sessions` (
   `last_login` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 COMMIT;
+

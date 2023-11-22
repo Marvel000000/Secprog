@@ -55,12 +55,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["username"] = $username;
             $_SESSION["email"] = $email;
 
+
             // Store session information in the active_sessions table
             $session_temp = session_id();
             $session_insert_stmt = $conn->prepare("INSERT INTO active_sessions (sessionID, username, last_login) VALUES (?, ?, NOW())");
             $session_insert_stmt->bind_param("ss", $session_temp, $username);
             $session_insert_stmt->execute();
             $session_insert_stmt->close();
+
 
             // Debugging output
             echo "Login successful. Redirecting to dashboard...";
@@ -76,12 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 }
 
+
 // If there's a login error, redirect to login page with the error message
 if (isset($login_error)) {
     header("location: ../code/login.php?error=$login_error");
     exit;
 }
-
 // Debugging output
 echo "Login failed. Redirecting to login page...";
 

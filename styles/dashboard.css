@@ -1,0 +1,177 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.custom-container {
+    max-width: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+}
+
+ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+li {
+    text-align: center;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    max-height: 150px; /* Adjust the max height as needed */
+    margin-bottom: 10px;
+}
+
+h1 {
+    color: #333;
+}
+
+p {
+    line-height: 1.6;
+}
+
+/* dashboard.css */
+
+/* dashboard.css */
+
+
+
+/* ... (existing styles) ... */
+
+/* Header/Navbar styles */
+/* ... (existing styles) ... */
+
+/* New Navbar styles */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Add this style to align buttons in one line */
+.navbar .user-container {
+    margin-right: 20px;
+}
+
+/* ... (existing styles) ... */
+
+
+.logo-container {
+    margin-left: 20px;
+}
+
+.logo-link {
+    text-decoration: none;
+    color: #fff;
+}
+
+.logo-text {
+    font-size: 24px;
+    margin: 0;
+    color: #fff;
+}
+
+
+button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Add this style to align buttons in one line */
+
+
+
+/* Add this to your existing dashboard.css or create a new CSS file */
+/* Add this to your existing dashboard.css or create a new CSS file */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: left; /* Align form elements to the left */
+    margin: 10% auto;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.close:hover {
+    color: black;
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.modal-content input[type="file"] {
+    margin-bottom: 20px;
+}
+
+.modal-content input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.modal-content input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+
+/* Responsive styling */
+@media screen and (max-width: 600px) {
+    ul {
+        grid-template-columns: 1fr;
+    }
+}
