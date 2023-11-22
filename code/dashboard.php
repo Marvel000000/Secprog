@@ -7,6 +7,7 @@ session_start();
 // Check if the user is logged in
 if (isset($_SESSION['loggedin'])) {
     $isLoggedIn = true;
+
     // Fetch all content from the database
     $sql = "SELECT id, title, image FROM content";
     $result = $conn->query($sql);
@@ -19,11 +20,30 @@ if (isset($_SESSION['loggedin'])) {
         echo "Error: " . $conn->error;
     }
 
-    // Close the connection (if not done automatically in connection.php)
-    $conn->close();
+    // Check if a search term is provided
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $searchTerm = $_GET['search'];
+        
+        // Perform the search query
+        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE '%$searchTerm%'";
+        $searchResult = $conn->query($searchSql);
+
+        // Check for success
+        if ($searchResult) {
+            // Fetch associative array for search results
+            $searchContentList = $searchResult->fetch_all(MYSQLI_ASSOC);
+
+            // Check if there are search results
+            if (!empty($searchContentList)) {
+                $contentList = $searchContentList; // Use search results if available
+            } else {
+                $noSearchResult = true; // Flag to indicate no search results
+            }
 } else {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging
+}
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -47,6 +67,13 @@ if (isset($_SESSION['loggedin'])) {
             </a>
         </div>
 
+        <div class="search-container">
+            <form action="dashboard.php" method="get">
+                <input type="text" placeholder="Search..." name="search">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
         <div class="user-container">
             <?php if ($isLoggedIn): ?>
                 <button onclick="window.location.href='update.php'">Update Profile</button>
@@ -63,8 +90,10 @@ if (isset($_SESSION['loggedin'])) {
         <h1>Content</h1>
 
         <?php
-        // Check if content is available
-        if ($isLoggedIn && !empty($contentList)) {
+        // Check if there are search results
+        if (isset($noSearchResult) && $noSearchResult) {
+            echo "<p>No search result.</p>";
+        } elseif ($isLoggedIn && !empty($contentList)) {
             echo "<ul>";
             foreach ($contentList as $content) {
                 $contentId = $content['id'];
@@ -92,6 +121,8 @@ if (isset($_SESSION['loggedin'])) {
             <button onclick="openModal()">Add Content</button>
         <?php } ?>
 
+        
+
         <!-- Add Content Form Modal -->
         <div id="addContentModal" class="modal">
             <div class="modal-content">
@@ -114,6 +145,3 @@ if (isset($_SESSION['loggedin'])) {
     </div>
 </body>
 </html>
-
-
-
