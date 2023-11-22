@@ -1,27 +1,46 @@
 <?php
 require_once '../controller/connection.php';
 
-// Start the session
+// Start the session with secure settings
+session_set_cookie_params([
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
 session_start();
 
 // Check if the user is logged in
 if (isset($_SESSION['loggedin'])) {
     $isLoggedIn = true;
 
-    // Fetch all content from the database
+
     $sql = "SELECT id, title, image FROM content";
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     // Check for success
     if ($result) {
         // Fetch associative array
         $contentList = $result->fetch_all(MYSQLI_ASSOC);
     } else {
-        echo "Error: " . $conn->error;
+        error_log("Error: " . $stmt->error);
+        echo "An error occurred. Please try again later.";
     }
 
     // Check if a search term is provided
     if (isset($_GET['search']) && !empty($_GET['search'])) {
+
+        // Validate and sanitize search term
+        $searchTerm = mysqli_real_escape_string($conn, $_GET['search']);
+
+        // Perform the search query using prepared statements
+        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE ?";
+        $searchStmt = $conn->prepare($searchSql);
+        $searchStmt->bind_param("s", $searchTerm);
+        $searchStmt->execute();
+        $searchResult = $searchStmt->get_result();
+
         $searchTerm = $_GET['search'];
         
         // Perform the search query
@@ -39,6 +58,12 @@ if (isset($_SESSION['loggedin'])) {
             } else {
                 $noSearchResult = true; // Flag to indicate no search results
             }
+
+        } else {
+            error_log("Error: " . $searchStmt->error);
+            echo "An error occurred. Please try again later.";
+        }
+    }
 } else {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging
@@ -46,8 +71,10 @@ if (isset($_SESSION['loggedin'])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,11 +83,12 @@ if (isset($_SESSION['loggedin'])) {
     <script src="../assets/js.js"></script>
 
 </head>
+
 <body>
 
-   <!-- header.php -->
+    <!-- header.php -->
 
-   <nav class="navbar">
+    <nav class="navbar">
         <div class="logo-container">
             <a href="dashboard.php" class="logo-link">
                 <h1 class="logo-text">Bodtrest</h1>
@@ -69,7 +97,11 @@ if (isset($_SESSION['loggedin'])) {
 
         <div class="search-container">
             <form action="dashboard.php" method="get">
+
+                <input type="text" placeholder="Search..." name="search" value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
+
                 <input type="text" placeholder="Search..." name="search">
+
                 <button type="submit">Search</button>
             </form>
         </div>
@@ -85,7 +117,6 @@ if (isset($_SESSION['loggedin'])) {
         </div>
     </nav>
 
-
     <div class="custom-container">
         <h1>Content</h1>
 
@@ -97,7 +128,7 @@ if (isset($_SESSION['loggedin'])) {
             echo "<ul>";
             foreach ($contentList as $content) {
                 $contentId = $content['id'];
-                $contentTitle = $content['title'];
+                $contentTitle = htmlspecialchars($content['title']);
                 $contentImage = $content['image'];
 
                 // Create a list item with a clickable image and a link to the view content page for each item
@@ -117,9 +148,9 @@ if (isset($_SESSION['loggedin'])) {
         ?>
 
         <!-- Add Content Form Modal Button -->
-        <?php if ($isLoggedIn) { ?>
+        <?php if ($isLoggedIn): ?>
             <button onclick="openModal()">Add Content</button>
-        <?php } ?>
+        <?php endif; ?>
 
         
 
@@ -144,4 +175,5 @@ if (isset($_SESSION['loggedin'])) {
         </div>
     </div>
 </body>
+
 </html>
