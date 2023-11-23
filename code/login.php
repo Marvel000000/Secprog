@@ -4,15 +4,6 @@ require_once "../controller/connection.php";
 // Initialize the session
 session_start();
 
-// Function to generate a CSRF token
-function generateCSRFToken()
-{
-    return bin2hex(random_bytes(32));
-}
-
-// Generate and store CSRF token
-$csrf_token = generateCSRFToken();
-$_SESSION["csrf_token"] = $csrf_token;
 ?>
 
 <!DOCTYPE html>

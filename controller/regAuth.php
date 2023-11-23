@@ -14,7 +14,7 @@ function is_valid_password($password) {
 function is_valid_image($file) {
     $allowedExtensions = array("jpeg", "jpg", "png", "gif");
 
-    if ($file["size"] > 2 * 1024 * 1024) { // 2 MB limit
+    if ($file["size"] > 5 * 1024 * 1024) { // 2 MB limit
         return false;
     }
 
