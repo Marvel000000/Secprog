@@ -45,7 +45,36 @@ p {
 
 /* dashboard.css */
 
+input {
+    padding: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
+/* Style specific types of input elements */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea {
+    width: 100%;
+}
+
+/* Style submit button */
+input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
 
 /* ... (existing styles) ... */
 
@@ -69,6 +98,22 @@ p {
 }
 
 /* ... (existing styles) ... */
+.search-container {
+    align-items: center;
+}
+
+.search-container form {
+    display: flex;
+    align-items: center;
+}
+
+.search-container .submit {
+    display: flex;
+    align-items: center;
+}
+
+
+
 
 
 .logo-container {
@@ -173,53 +218,5 @@ button:hover {
 @media screen and (max-width: 600px) {
     ul {
         grid-template-columns: 1fr;
-    }
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    margin-right: 20px; /* Adjust spacing between search bar and user buttons */
-}
-
-form {
-    display: flex;
-}
-
-input[type="text"] {
-    padding: 10px;
-    border: none;
-    border-radius: 4px 0 0 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-button[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    padding: 10px 16px;
-    transition: background-color 0.3s ease-in-out;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive styling */
-@media screen and (max-width: 600px) {
-    .search-container {
-        margin-right: 0;
-        margin-bottom: 10px; /* Adjust spacing in smaller screens */
-    }
-
-    input[type="text"] {
-        flex-grow: 1;
-    }
-
-    button[type="submit"] {
-        border-radius: 0 0 4px 4px;
-        margin-top: 10px; /* Adjust spacing in smaller screens */
     }
 }

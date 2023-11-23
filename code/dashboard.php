@@ -44,8 +44,6 @@ if (isset($_SESSION['loggedin'])) {
         $searchTerm = $_GET['search'];
         
         // Perform the search query
-        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE '%$searchTerm%'";
-        $searchResult = $conn->query($searchSql);
 
         // Check for success
         if ($searchResult) {
@@ -68,8 +66,7 @@ if (isset($_SESSION['loggedin'])) {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging
 }
-    }
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -99,8 +96,6 @@ if (isset($_SESSION['loggedin'])) {
             <form action="dashboard.php" method="get">
 
                 <input type="text" placeholder="Search..." name="search" value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
-
-                <input type="text" placeholder="Search..." name="search">
 
                 <button type="submit">Search</button>
             </form>
