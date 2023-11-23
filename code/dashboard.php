@@ -13,7 +13,6 @@ session_start();
 if (isset($_SESSION['loggedin'])) {
     $isLoggedIn = true;
 
-
     $sql = "SELECT id, title, image FROM content";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
@@ -26,6 +25,11 @@ if (isset($_SESSION['loggedin'])) {
     } else {
         error_log("Error: " . $stmt->error);
         echo "An error occurred. Please try again later.";
+    }
+
+    if (isset($_SESSION['upload_errors'])) {
+        $uploadErrors = $_SESSION['upload_errors'];
+        unset($_SESSION['upload_errors']); // Clear the session variable
     }
 
     // Check if a search term is provided
@@ -42,8 +46,6 @@ if (isset($_SESSION['loggedin'])) {
         $searchResult = $searchStmt->get_result();
 
         $searchTerm = $_GET['search'];
-        
-        // Perform the search query
 
         // Check for success
         if ($searchResult) {
@@ -62,6 +64,7 @@ if (isset($_SESSION['loggedin'])) {
             echo "An error occurred. Please try again later.";
         }
     }
+
 } else {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging
@@ -95,7 +98,8 @@ if (isset($_SESSION['loggedin'])) {
         <div class="search-container">
             <form action="dashboard.php" method="get">
 
-                <input type="text" placeholder="Search..." name="search" value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
+                <input type="text" placeholder="Search..." name="search"
+                    value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
 
                 <button type="submit">Search</button>
             </form>
@@ -114,6 +118,17 @@ if (isset($_SESSION['loggedin'])) {
 
     <div class="custom-container">
         <h1>Content</h1>
+
+        <?php
+        // Display upload errors
+        if (isset($uploadErrors) && !empty($uploadErrors)) {
+            echo "<div class='error-container'>";
+            foreach ($uploadErrors as $error) {
+                echo "<p class='error-message'>$error</p>";
+            }
+            echo "</div>";
+        }
+        ?>
 
         <?php
         // Check if there are search results
@@ -146,8 +161,6 @@ if (isset($_SESSION['loggedin'])) {
         <?php if ($isLoggedIn): ?>
             <button onclick="openModal()">Add Content</button>
         <?php endif; ?>
-
-        
 
         <!-- Add Content Form Modal -->
         <div id="addContentModal" class="modal">

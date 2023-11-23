@@ -56,18 +56,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // If no validation errors, proceed with database insertion
 
-        $stmt = $conn->prepare("INSERT INTO content (title, description, image) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO content (id, title, description, image) VALUES (?, ?, ?, ?)");
         if ($stmt === false) {
             die('Error in prepare statement: ' . htmlspecialchars($conn->error));
         }
 
-        $stmt->bind_param("sss", $title, $description, $image_name);
+        // Generate a random string for the id
+        $id = substr(uniqid(), 0, 20);
+
+        $stmt->bind_param("ssss", $id, $title, $description, $image_name);
 
         // Generate a random string for the image name
         $image_name = uniqid('', true) . '.' . pathinfo($image["name"], PATHINFO_EXTENSION);
 
         if ($stmt->execute()) {
-            $target_dir = "../images/";
+            $target_dir = "../image/";
             $target_file = $target_dir . $image_name;
             move_uploaded_file($image["tmp_name"], $target_file);
 
