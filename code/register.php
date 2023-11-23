@@ -1,3 +1,14 @@
+<?php
+session_start();
+        // Display error messages if any
+        if (isset($_SESSION['registration_errors'])) {
+            foreach ($_SESSION['registration_errors'] as $error) {
+                echo '<p class="error-message">' . $error . '</p>';
+            }
+            // Clear the errors after displaying them
+            unset($_SESSION['registration_errors']);
+        }
+        ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +21,8 @@
 <body>
     <form action="../controller/regAuth.php" method="post" enctype="multipart/form-data">
          <h2>User Registration Form</h2>
+
+      
 
         <label for="name">Name:</label>
         <input type="text" name="name" required><br>

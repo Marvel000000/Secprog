@@ -11,7 +11,11 @@ if (isset($_SESSION["loggedin"])  === true) {
 }
 
 // Check if the form is submitted and the CSRF token is valid
-
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validate CSRF token
+    if (!isset($_POST["csrf_token"]) || !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])) {
+        die("CSRF token validation failed. Please try again.");
+    }
 
     // Validate user input
     $email = $_POST["email"];
@@ -63,29 +67,22 @@ if (isset($_SESSION["loggedin"])  === true) {
             $session_insert_stmt->execute();
             $session_insert_stmt->close();
 
-            // Debugging output
-            echo "Login successful. Redirecting to dashboard...";
+            // Redirect to dashboard after successful login
             header("location: ../code/dashboard.php");
             exit;
         } else {
-            $login_error = "Invalid password";
+            // Set login error message in session
+            $_SESSION['login_error'] = "Invalid password";
         }
     } else {
-        $login_error = "User not found";
+        // Set login error message in session
+        $_SESSION['login_error'] = "User not found";
     }
 
     $stmt->close();
-
-
-// If there's a login error, redirect to login page with the error message
-if (isset($login_error)) {
-    header("location: ../code/login.php");
-    exit;
 }
 
-// Debugging output
-echo "Login failed. Redirecting to login page...";
-
-// Close the database connection
-$conn->close();
+// If there's a login error, redirect to login page
+header("location: ../code/login.php");
+exit;
 ?>
