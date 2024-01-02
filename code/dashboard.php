@@ -13,7 +13,6 @@ session_start();
 if (isset($_SESSION['loggedin'])) {
     $isLoggedIn = true;
 
-
     $sql = "SELECT id, title, image FROM content";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
@@ -28,48 +27,45 @@ if (isset($_SESSION['loggedin'])) {
         echo "An error occurred. Please try again later.";
     }
 
-    // Check if a search term is provided
+    if (isset($_SESSION['upload_errors'])) {
+        $uploadErrors = $_SESSION['upload_errors'];
+        unset($_SESSION['upload_errors']); // Clear the session variable
+    }
+    
     if (isset($_GET['search']) && !empty($_GET['search'])) {
-
         // Validate and sanitize search term
-        $searchTerm = mysqli_real_escape_string($conn, $_GET['search']);
-
+        $rawSearchTerm = $_GET['search'];
+        $searchTerm = '%' . mysqli_real_escape_string($conn, $rawSearchTerm) . '%';
+    
         // Perform the search query using prepared statements
-        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE ?";
+        $searchSql = "SELECT id, title, image FROM content WHERE LOWER(title) LIKE LOWER(?)";
         $searchStmt = $conn->prepare($searchSql);
         $searchStmt->bind_param("s", $searchTerm);
         $searchStmt->execute();
         $searchResult = $searchStmt->get_result();
-
-        $searchTerm = $_GET['search'];
-        
-        // Perform the search query
-        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE '%$searchTerm%'";
-        $searchResult = $conn->query($searchSql);
-
+    
         // Check for success
         if ($searchResult) {
             // Fetch associative array for search results
             $searchContentList = $searchResult->fetch_all(MYSQLI_ASSOC);
-
+    
             // Check if there are search results
             if (!empty($searchContentList)) {
                 $contentList = $searchContentList; // Use search results if available
             } else {
                 $noSearchResult = true; // Flag to indicate no search results
             }
-
         } else {
             error_log("Error: " . $searchStmt->error);
             echo "An error occurred. Please try again later.";
         }
     }
+    
 } else {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging
 }
-    }
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -98,9 +94,8 @@ if (isset($_SESSION['loggedin'])) {
         <div class="search-container">
             <form action="dashboard.php" method="get">
 
-                <input type="text" placeholder="Search..." name="search" value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
-
-                <input type="text" placeholder="Search..." name="search">
+                <input type="text" placeholder="Search..." name="search"
+                    value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
 
                 <button type="submit">Search</button>
             </form>
@@ -119,6 +114,17 @@ if (isset($_SESSION['loggedin'])) {
 
     <div class="custom-container">
         <h1>Content</h1>
+
+        <?php
+        // Display upload errors
+        if (isset($uploadErrors) && !empty($uploadErrors)) {
+            echo "<div class='error-container'>";
+            foreach ($uploadErrors as $error) {
+                echo "<p class='error-message'>$error</p>";
+            }
+            echo "</div>";
+        }
+        ?>
 
         <?php
         // Check if there are search results
@@ -151,8 +157,6 @@ if (isset($_SESSION['loggedin'])) {
         <?php if ($isLoggedIn): ?>
             <button onclick="openModal()">Add Content</button>
         <?php endif; ?>
-
-        
 
         <!-- Add Content Form Modal -->
         <div id="addContentModal" class="modal">
