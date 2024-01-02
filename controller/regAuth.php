@@ -12,9 +12,9 @@ function is_valid_password($password) {
 }
 
 function is_valid_image($file) {
-    $allowedExtensions = array("jpeg", "jpg", "png", "gif");
+    $allowedExtensions = array("jpeg", "jpg", "png");
 
-    if ($file["size"] > 50 * 1024 * 1024) { // 50 MB limit
+    if ($file["size"] > 2 * 1024 * 1024) { // 2 MB limit
         return false;
     }
 
@@ -37,6 +37,17 @@ function is_valid_image($file) {
 
 function validateUsername($name) {
     return !empty($name) && strlen($name) <= 30 && !preg_match('/[\<\>\;\:\"\'\%]/', $name);
+}
+
+function is_email_duplicate($conn, $email) {
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    $num_rows = $stmt->num_rows;
+    $stmt->close();
+
+    return $num_rows > 0;
 }
 
 // Initialize error array
@@ -72,7 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['registration_errors'] = $errors;
         header("location: ../code/register.php");
         exit;
-    } else {
+    } elseif (is_email_duplicate($conn, $email)) {
+        $errors[] = "Email is already in use.";
+        header("location: ../code/register.php");
+        $_SESSION['registration_errors'] = $errors;
+
+    }else {
         // If no validation errors, proceed with database insertion
 
         $stmt = $conn->prepare("INSERT INTO users (id, name, email, password, image) VALUES (?, ?, ?, ?, ?)");

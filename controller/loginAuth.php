@@ -5,13 +5,18 @@ require_once "./connection.php";
 session_start();
 
 // Check if the user is already logged in, redirect to dashboard if true
-if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+if (isset($_SESSION["loggedin"])  === true) {
     header("location: ../code/dashboard.php");
     exit;
 }
 
-// Check if the form is submitted
+// Check if the form is submitted and the CSRF token is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validate CSRF token
+    if (!isset($_POST["csrf_token"]) || !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])) {
+        die("CSRF token validation failed. Please try again.");
+    }
+
     // Validate user input
     $email = $_POST["email"];
     $password = $_POST["password"];
@@ -55,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["username"] = $username;
             $_SESSION["email"] = $email;
 
-
             // Store session information in the active_sessions table
             $session_temp = session_id();
             $session_insert_stmt = $conn->prepare("INSERT INTO active_sessions (sessionID, username, last_login) VALUES (?, ?, NOW())");
@@ -63,30 +67,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $session_insert_stmt->execute();
             $session_insert_stmt->close();
 
-
-            // Debugging output
-            echo "Login successful. Redirecting to dashboard...";
+            // Redirect to dashboard after successful login
             header("location: ../code/dashboard.php");
             exit;
         } else {
-            $login_error = "Invalid password";
+            // Set login error message in session
+            $_SESSION['login_error'] = "Invalid password";
         }
     } else {
-        $login_error = "User not found";
+        // Set login error message in session
+        $_SESSION['login_error'] = "User not found";
     }
 
     $stmt->close();
 }
 
-
-// If there's a login error, redirect to login page with the error message
-if (isset($login_error)) {
-    header("location: ../code/login.php?error=$login_error");
-    exit;
-}
-// Debugging output
-echo "Login failed. Redirecting to login page...";
-
-// Close the database connection
-$conn->close();
+// If there's a login error, redirect to login page
+header("location: ../code/login.php");
+exit;
 ?>

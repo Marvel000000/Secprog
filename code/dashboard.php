@@ -31,7 +31,7 @@ if (isset($_SESSION['loggedin'])) {
         $uploadErrors = $_SESSION['upload_errors'];
         unset($_SESSION['upload_errors']); // Clear the session variable
     }
-    
+
     if (isset($_GET['search']) && !empty($_GET['search'])) {
         // Validate and sanitize search term
         $rawSearchTerm = $_GET['search'];
@@ -43,7 +43,13 @@ if (isset($_SESSION['loggedin'])) {
         $searchStmt->bind_param("s", $searchTerm);
         $searchStmt->execute();
         $searchResult = $searchStmt->get_result();
+
     
+=======
+
+        $searchTerm = $_GET['search'];
+
+
         // Check for success
         if ($searchResult) {
             // Fetch associative array for search results
@@ -60,7 +66,11 @@ if (isset($_SESSION['loggedin'])) {
             echo "An error occurred. Please try again later.";
         }
     }
+
     
+=======
+
+
 } else {
     $isLoggedIn = false;
     echo "User is not logged in."; // Add this for debugging

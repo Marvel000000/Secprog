@@ -1,7 +1,7 @@
-        function openModal() {
-            document.getElementById('addContentModal').style.display = 'block';
-        }
+function openModal() {
+    document.getElementById('addContentModal').style.display = 'block';
+}
 
-        function closeModal() {
-            document.getElementById('addContentModal').style.display = 'none';
-        }
+function closeModal() {
+    document.getElementById('addContentModal').style.display = 'none';
+}
