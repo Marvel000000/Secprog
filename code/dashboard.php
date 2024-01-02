@@ -45,7 +45,7 @@ if (isset($_SESSION['loggedin'])) {
         $searchResult = $searchStmt->get_result();
 
     
-=======
+
 
         $searchTerm = $_GET['search'];
 
@@ -68,7 +68,6 @@ if (isset($_SESSION['loggedin'])) {
     }
 
     
-=======
 
 
 } else {
