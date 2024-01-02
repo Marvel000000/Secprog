@@ -32,38 +32,44 @@ if (isset($_SESSION['loggedin'])) {
         unset($_SESSION['upload_errors']); // Clear the session variable
     }
 
-    // Check if a search term is provided
     if (isset($_GET['search']) && !empty($_GET['search'])) {
-
         // Validate and sanitize search term
-        $searchTerm = mysqli_real_escape_string($conn, $_GET['search']);
-
+        $rawSearchTerm = $_GET['search'];
+        $searchTerm = '%' . mysqli_real_escape_string($conn, $rawSearchTerm) . '%';
+    
         // Perform the search query using prepared statements
-        $searchSql = "SELECT id, title, image FROM content WHERE title LIKE ?";
+        $searchSql = "SELECT id, title, image FROM content WHERE LOWER(title) LIKE LOWER(?)";
         $searchStmt = $conn->prepare($searchSql);
         $searchStmt->bind_param("s", $searchTerm);
         $searchStmt->execute();
         $searchResult = $searchStmt->get_result();
 
+    
+=======
+
         $searchTerm = $_GET['search'];
+
 
         // Check for success
         if ($searchResult) {
             // Fetch associative array for search results
             $searchContentList = $searchResult->fetch_all(MYSQLI_ASSOC);
-
+    
             // Check if there are search results
             if (!empty($searchContentList)) {
                 $contentList = $searchContentList; // Use search results if available
             } else {
                 $noSearchResult = true; // Flag to indicate no search results
             }
-
         } else {
             error_log("Error: " . $searchStmt->error);
             echo "An error occurred. Please try again later.";
         }
     }
+
+    
+=======
+
 
 } else {
     $isLoggedIn = false;
