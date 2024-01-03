@@ -1,6 +1,13 @@
 <?php
 require_once "./connection.php";
-session_start();
+require_once "./csrf.php";
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$_SESSION['csrf_token'] = generateCsrfToken();
+$csrf_token = $_SESSION['csrf_token'];
 
 function is_valid_image($file) {
     $allowedExtensions = array("jpeg", "jpg", "png");
@@ -30,6 +37,12 @@ function is_valid_image($file) {
 $errors = array();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $csrf_token = $_POST['csrf_token'];
+    if (!validateCsrfToken($csrf_token)) {
+        die("CSRF token validation failed. Access denied.");
+    }
+
     // Validate title
     $title = $_POST['title'];
     if (empty($title) || strlen($title) > 255) {

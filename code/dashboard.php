@@ -1,13 +1,17 @@
 <?php
 require_once '../controller/connection.php';
+require_once "../controller/csrf.php";
 
 // Start the session with secure settings
-session_set_cookie_params([
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-session_start();
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$_SESSION['csrf_token'] = generateCsrfToken();
+$csrf_token = $_SESSION['csrf_token'];
+
+
 
 // Check if the user is logged in
 if (isset($_SESSION['loggedin'])) {
@@ -174,6 +178,7 @@ if (isset($_SESSION['loggedin'])) {
                 <h2>Add Content</h2>
                 <form action="../controller/uploadAuth.php" method="post" enctype="multipart/form-data">
                     <label for="title">Title:</label>
+                    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                     <input type="text" id="title" name="title" required>
 
                     <label for="description">Description:</label>

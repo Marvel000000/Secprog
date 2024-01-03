@@ -2,7 +2,10 @@
 require_once "./connection.php";
 
 // Initialize the session
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 
 // Check if the user is not logged in, redirect to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
@@ -11,6 +14,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $csrf_token = $_POST['csrf_token'];
+    if (!validateCsrfToken($csrf_token)) {
+        die("CSRF token validation failed. Access denied.");
+    }
     // Function to validate email
     function is_valid_email($email) {
         return filter_var($email, FILTER_VALIDATE_EMAIL);

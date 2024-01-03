@@ -1,6 +1,10 @@
 <?php
-session_start();
+    require_once "../controller/csrf.php";    
+        session_start();
         // Display error messages if any
+        $_SESSION['csrf_token'] = generateCsrfToken();
+        $csrf_token = $_SESSION['csrf_token'];
+
         if (isset($_SESSION['registration_errors'])) {
             foreach ($_SESSION['registration_errors'] as $error) {
                 echo '<p class="error-message">' . $error . '</p>';
@@ -8,6 +12,7 @@ session_start();
             // Clear the errors after displaying them
             unset($_SESSION['registration_errors']);
         }
+
         ?>
 <!DOCTYPE html>
 <html lang="en">

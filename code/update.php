@@ -1,3 +1,19 @@
+<?php
+require_once "../controller/connection.php";
+require_once "../controller/csrf.php";
+
+// Initialize the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+
+// Generate and store CSRF token
+$_SESSION['csrf_token'] = generateCsrfToken();
+$csrf_token = $_SESSION['csrf_token'];
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

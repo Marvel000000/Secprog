@@ -1,8 +1,11 @@
 <?php
 require_once "./connection.php";
-
+require_once "./csrf.php";
 // Initialize the session
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 
 // Check if the user is already logged in, redirect to dashboard if true
 if (isset($_SESSION["loggedin"])  === true) {
@@ -13,10 +16,10 @@ if (isset($_SESSION["loggedin"])  === true) {
 // Check if the form is submitted and the CSRF token is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate CSRF token
-    if (!isset($_POST["csrf_token"]) || !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])) {
-        die("CSRF token validation failed. Please try again.");
+    $csrf_token = $_POST['csrf_token'];
+    if (!validateCsrfToken($csrf_token)) {
+        die("CSRF token validation failed. Access denied.");
     }
-
     // Validate user input
     $email = $_POST["email"];
     $password = $_POST["password"];
