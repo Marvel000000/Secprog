@@ -8,7 +8,7 @@ function generateCsrfToken() {
         $_SESSION['csrf_token'] = $token;
     }
 
-    return $token;
+    return $_SESSION['csrf_token'];
 }
 
 function validateCsrfToken($csrf_token) {

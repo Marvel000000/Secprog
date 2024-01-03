@@ -105,13 +105,12 @@ if (isset($_SESSION['loggedin'])) {
         </div>
 
         <div class="search-container">
-            <form action="dashboard.php" method="get">
+        <form action="dashboard.php" method="get">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+            <input type="text" placeholder="Search..." name="search" value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
+            <button type="submit">Search</button>
+        </form>
 
-                <input type="text" placeholder="Search..." name="search"
-                    value="<?php echo isset($searchTerm) ? htmlspecialchars($searchTerm) : ''; ?>">
-
-                <button type="submit">Search</button>
-            </form>
         </div>
 
         <div class="user-container">
@@ -137,10 +136,11 @@ if (isset($_SESSION['loggedin'])) {
             }
             echo "</div>";
         }
+        
         ?>
 
         <?php
-        // Check if there are search results
+            // Check if there are search results
         if (isset($noSearchResult) && $noSearchResult) {
             echo "<p>No search result.</p>";
         } elseif ($isLoggedIn && !empty($contentList)) {
@@ -164,6 +164,24 @@ if (isset($_SESSION['loggedin'])) {
         } else {
             echo "<p>No content available.</p>";
         }
+
+        // Validate CSRF token for search functionality
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $rawSearchTerm = $_GET['search'];
+            $searchTerm = '%' . mysqli_real_escape_string($conn, $rawSearchTerm) . '%';
+
+            // Validate CSRF token
+            $csrf_token_search = isset($_GET['csrf_token']) ? $_GET['csrf_token'] : '';
+            if (!validateCsrfToken($csrf_token_search)) {
+                // Handle CSRF token validation failure (e.g., show an error message)
+                echo "CSRF token validation failed. Access denied for search functionality.";
+                exit;
+            }
+
+            // Rest of your search logic here...
+        }
+
+        
         ?>
 
         <!-- Add Content Form Modal Button -->
@@ -177,8 +195,8 @@ if (isset($_SESSION['loggedin'])) {
                 <span class="close" onclick="closeModal()">&times;</span>
                 <h2>Add Content</h2>
                 <form action="../controller/uploadAuth.php" method="post" enctype="multipart/form-data">
-                    <label for="title">Title:</label>
                     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                    <label for="title">Title:</label>
                     <input type="text" id="title" name="title" required>
 
                     <label for="description">Description:</label>

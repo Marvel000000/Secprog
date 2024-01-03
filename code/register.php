@@ -1,6 +1,8 @@
 <?php
     require_once "../controller/csrf.php";    
+    if (session_status() == PHP_SESSION_NONE) {
         session_start();
+    }
         // Display error messages if any
         $_SESSION['csrf_token'] = generateCsrfToken();
         $csrf_token = $_SESSION['csrf_token'];
@@ -25,6 +27,7 @@
 </head>
 <body>
     <form action="../controller/regAuth.php" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
          <h2>User Registration Form</h2>
 
       

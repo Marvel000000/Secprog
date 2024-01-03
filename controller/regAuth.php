@@ -1,7 +1,13 @@
 <?php
 require_once "./connection.php";
+require_once "./csrf.php";
 
-session_start(); // Start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$_SESSION['csrf_token'] = generateCsrfToken();
+$csrf_token = $_SESSION['csrf_token'];
 
 function is_valid_email($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -54,6 +60,12 @@ function is_email_duplicate($conn, $email) {
 $errors = array();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $csrf_token = $_POST['csrf_token'];
+    if (!validateCsrfToken($csrf_token)) {
+        die("CSRF token validation failed. Access denied.");
+    }
+
     // Validate name
     $name = $_POST['name'];
     if (!validateUsername($name)) {
