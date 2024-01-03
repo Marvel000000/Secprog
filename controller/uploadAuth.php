@@ -40,6 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $csrf_token = $_POST['csrf_token'];
     if (!validateCsrfToken($csrf_token)) {
+        echo $csrf_token;
+
+        echo $_SESSION['csrf_token'];
         die("CSRF token validation failed. Access denied.");
     }
 

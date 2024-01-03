@@ -1,11 +1,26 @@
 <?php
 
 require_once "./connection.php";
+require_once "./csrf.php";
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
     if (isset($_SESSION["loggedin"])  === true) {
+        
+        $_SESSION['csrf_token'] = generateCsrfToken();
+        $csrf_token = $_SESSION['csrf_token'];
+
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+            $csrf_token = $_POST['csrf_token'];
+            if (!validateCsrfToken($csrf_token)) {
+                echo $csrf_token;
+        
+                echo $_SESSION['csrf_token'];
+                die("CSRF token validation failed. Access denied.");
+            }
+        
             // Prepare and bind parameters
             $stmt = $conn->prepare("DELETE FROM content WHERE id = ?");
             $stmt->bind_param("s", $id);

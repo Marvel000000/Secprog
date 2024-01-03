@@ -8,6 +8,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 
+
 // Generate and store CSRF token
 $_SESSION['csrf_token'] = generateCsrfToken();
 $csrf_token = $_SESSION['csrf_token'];
@@ -26,6 +27,8 @@ $csrf_token = $_SESSION['csrf_token'];
     <div class="container">
 
         <form action="../controller/updateProfile.php" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+
             <!-- Update Name Section -->
             <h3>Update Name</h3>
             <label for="new_name">New Name:</label>
